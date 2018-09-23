@@ -3,7 +3,6 @@ package org.activiti;
 import java.util.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,7 +22,7 @@ public class Priorite {
 	@Temporal(TemporalType.DATE)
 	private Date dateFin;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "owner")
 	private Employe owner;
 

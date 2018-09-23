@@ -1,8 +1,14 @@
 package org.activiti;
 
-import org.activiti.model.EmployeModel;
-import org.activiti.model.PrioriteModel;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Task;
+import org.activiti.model.PrioriteModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.view.RedirectView;
 
+
 @Controller
 public class EmployeController {
 	
@@ -20,8 +27,12 @@ public class EmployeController {
 	
 	@Autowired
 	private EmployeRepository employeRepository;
-
 	
+	@Autowired
+	private RuntimeService runtimeService;
+	
+	@Autowired
+	private TaskService taskService;
 
 	/***
 	 * list of employee prio
@@ -42,8 +53,6 @@ public class EmployeController {
 	 * @param priorite
 	 * @return
 	 */
-	
-
 	@RequestMapping(value  = "newEmployeePrio", method = RequestMethod.POST)
 	public RedirectView addNewPriority(@ModelAttribute("priorite")PrioriteModel prioriteModel){
 		Priorite prio  = new Priorite();
@@ -52,24 +61,26 @@ public class EmployeController {
 		prio.setDescription(prioriteModel.getDescription());
 		prio.setDateFin(prioriteModel.getDateFin());
 		prioRepository.save(prio);
+		
+		
+		Map<String, Object> vars = Collections.<String, Object>singletonMap("priority", prio);
+		ProcessInstance processInstance  = runtimeService.startProcessInstanceByKey("prioriteProcess", vars);
+	    
+		
+	    // set the task to the current employee 
+	      List<Task> tasks = taskService.createTaskQuery().executionId(processInstance.getId()).list();
+	      for (Task task : tasks) {
+	         task.setOwner(prio.getOwner().getMatricule());
+	         if (prio.getOwner().getManager() != null){
+	        	 task.setAssignee(prio.getOwner().getManager().getMatricule());	        	 
+	         }
+	         taskService.saveTask(task);
+	      }
+	    
+	      // show the acitviti APIS as below
+	      // http://localhost:8080/runtime/tasks
+	      
+	      
 		return new RedirectView("employeePrio/"+prioriteModel.getMatricule());
 	}
-	
-	@RequestMapping(value  = "/manager/{manager}", method = RequestMethod.GET)
-	public String team(Model model, @PathVariable("manager") String manag){
-		Employe manager  = employeRepository.findOne(manag);
-		model.addAttribute("employees", employeRepository.getEmployeByManager(manager));
-		return "team";
-	}
-	
-	@RequestMapping(value  = "/listPriorite/{matricule}", method = RequestMethod.GET)
-	public String listPriorite(Model model, @PathVariable("matricule") String matricule){
-		Priorite priorote  = prioRepository.findOne(matricule);
-		model.addAttribute("priorities", prioRepository.findByOwner(matricule));
-		return "priorotes";
-		
-	
-	}
-	
-	
 }
