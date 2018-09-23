@@ -17,29 +17,30 @@
 
 </head>
 <body>
-	<div class="container" style="padding-top: 5%;">
-		<h2>Créer un objectif</h2>
-		<form>
-			<div class="form-group">
-				<label for="title">Titre</label> <input class="form-control"
-					id="title" aria-describedby="emailHelp" placeholder="Enter title" />
-			</div>
-			<div class="form-group">
-				<label for="description">Description</label>
-				<textarea class="form-control" rows="5" id="description"></textarea>
-			</div>
-			<div class="form-group">
-				<label for="datetimepicker1">date de fin</label>
-				<div class='input-group date' id='datetimepicker1'>
-					<input type='text' class="form-control" /> <span
-						class="input-group-addon"> <span
-						class="glyphicon glyphicon-calendar"></span>
-					</span>
-				</div>
-			</div>
-			<button type="submit" class="btn btn-primary">Submit</button>
-		</form>
-		<!-- Latest compiled and minified JavaScript -->
+	
+	<div class="container"  style="padding-top: 5%;">
+		<h2>List des employees</h2>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Matricule</th>
+					<th>Nom</th>
+					<th>Prénom</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="employee : ${employees}">
+					<td th:text="${employee.matricule}"></td>
+					<td th:text="${employee.nom}"></td>
+					<td th:text="${employee.prenom}"></td>
+					<td ><a  th:href="@{'listPriorite/'+${employee.matricule}}">liste des priorités</a></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	<!-- Latest compiled and minified JavaScript -->
 
 		<script
 			src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
@@ -56,10 +57,8 @@
 
 		<script type="text/javascript">
             $(function () {
-                $('#datetimepicker1').datetimepicker();
+                $('#dateFin').datetimepicker();
             });
         </script>
-
-	</div>
 </body>
 </html>

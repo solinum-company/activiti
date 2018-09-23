@@ -19,19 +19,24 @@
 <body>
 	<div class="container" style="padding-top: 5%;">
 		<h2>Créer un objectif</h2>
-		<form>
+		<form action="/newEmployeePrio" method="post" th:object="${priorite}">
+
+			<input id="matricule" name="matricule" type="hidden"
+				th:field="*{matricule}" />
+
 			<div class="form-group">
 				<label for="title">Titre</label> <input class="form-control"
-					id="title" aria-describedby="emailHelp" placeholder="Enter title" />
+					th:field="*{titre}" aria-describedby="emailHelp"
+					placeholder="Enter title" />
 			</div>
 			<div class="form-group">
 				<label for="description">Description</label>
-				<textarea class="form-control" rows="5" id="description"></textarea>
+				<textarea class="form-control" rows="5" th:field="*{description}"></textarea>
 			</div>
 			<div class="form-group">
 				<label for="datetimepicker1">date de fin</label>
-				<div class='input-group date' id='datetimepicker1'>
-					<input type='text' class="form-control" /> <span
+				<div class='input-group date'>
+					<input type='text' th:field="*{dateFin}" class="form-control" /> <span
 						class="input-group-addon"> <span
 						class="glyphicon glyphicon-calendar"></span>
 					</span>
@@ -56,10 +61,31 @@
 
 		<script type="text/javascript">
             $(function () {
-                $('#datetimepicker1').datetimepicker();
+                $('#dateFin').datetimepicker();
             });
         </script>
 
+	</div>
+
+
+	<div class="container">
+		<h2>List des objectifs</h2>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Titre</th>
+					<th>Description</th>
+					<th>Date de fin</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="t : ${team}">
+					<td th:text="${t.nom}"></td>
+					<td th:text="${t.prenom}"></td>
+					
+				</tr>
+			</tbody>
+		</table>
 	</div>
 </body>
 </html>

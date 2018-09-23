@@ -1,23 +1,21 @@
-package org.activiti;
+package org.activiti.model;
 
 import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-@Entity
-public class Employe implements Serializable {
+import org.activiti.Employe;
+import org.activiti.Priorite;
 
-	/**
-	 * 
-	 */
+public class EmployeModel implements Serializable{
+	
 	private static final long serialVersionUID = 1L;
-
+	
 	@Id
 	@Column(name = "matricule")
 	private String matricule;
@@ -33,19 +31,7 @@ public class Employe implements Serializable {
 	@OneToMany(mappedBy = "owner")
 	private List<Priorite> priorites;
 
-	public Employe() {
-		super();
-	}
-
-	public Employe(String matricule, String nom, String prenom,
-			Employe manager, List<Priorite> priorites) {
-		super();
-		this.matricule = matricule;
-		this.nom = nom;
-		this.prenom = prenom;
-		this.manager = manager;
-		this.priorites = priorites;
-	}
+	
 
 	public String getMatricule() {
 		return matricule;
